@@ -6,6 +6,7 @@ from decision_tree_classifier import *
 from gradient_boosting_classifier import *
 from logistic_regression import *
 import os
+import cerberus
 
 
 
@@ -31,6 +32,7 @@ def loadTestLabels():
     TestLabelPrompt.config(text=os.path.basename(testFileName))
 
 def displayMethodOptions(args):
+    global Alg
     Alg = AlgList[AlgorithmMenu.curselection()[0]]
     Alg.Display_Options()
     
@@ -45,7 +47,7 @@ AlgorithmFrame['relief'] = 'sunken'
 
 
 AlgList = {0: Decision_Tree_Classifier(AlgorithmFrame), 1: Gradient_Boosting_Classifier(AlgorithmFrame), 2: Logistic_Regression(AlgorithmFrame)}
-
+Alg = AlgList[0]
 # create a pulldown menu, and add it to the menu bar
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Open", command=openFile)
@@ -109,7 +111,7 @@ AlgorithmMenu = Listbox(content, listvariable=algorithms, height=10, width=30)
 AlgorithmMenu.grid(column=0, columnspan=4, row=1, sticky=(N,W,E,S))
 AlgorithmMenu.bind('<<ListboxSelect>>', displayMethodOptions)
 AlgList[0].Display_Options()
-Run = ttk.Button(content, text='Run')
+Run = ttk.Button(content, text='Run', command=lambda: Alg.Run())
 Run.grid(column=0, row=2, sticky=(W))
 
 

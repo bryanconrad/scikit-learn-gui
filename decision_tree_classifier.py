@@ -1,6 +1,7 @@
 from algorithm import Algorithm
 from tkinter import *
 from tkinter import ttk
+import cerberus
 
 class Decision_Tree_Classifier(Algorithm):
 	
@@ -27,12 +28,11 @@ class Decision_Tree_Classifier(Algorithm):
 		self.MaxFeatures = StringVar()
 		self.MaxFeatures.set('none')
 		self.MaxFeatures_Integer = StringVar()
-		self.MaxFeatures_Float = 0.0
 		self.MaxFeatures_None = ttk.Radiobutton(frame, text='None', variable=self.MaxFeatures, value='none')
 		self.MaxFeatures_Integer_Button = ttk.Radiobutton(frame, text='Number:', variable=self.MaxFeatures, value='integer')
 		self.MaxFeatures_Integer_Box = ttk.Entry(frame, textvariable=self.MaxFeatures_Integer, width=7)
 		self.MaxFeatures_Float_Button = ttk.Radiobutton(frame, text='Percentage:', variable=self.MaxFeatures, value='float')
-		self.MaxFeatures_Float_Box = Spinbox(frame, from_=0.0, to=1.0, textvariable=self.MaxFeatures_Float, width=5, increment=0.01)
+		self.MaxFeatures_Float_Box = Spinbox(frame, from_=0.0, to=1.0, width=5, increment=0.01)
 		self.MaxFeatures_Auto = ttk.Radiobutton(frame, text='Auto', variable=self.MaxFeatures, value='auto')
 		self.MaxFeatures_Log2 = ttk.Radiobutton(frame, text='Log2', variable=self.MaxFeatures, value='log2')
 		
@@ -91,6 +91,84 @@ class Decision_Tree_Classifier(Algorithm):
 		self.RandomState_None = ttk.Radiobutton(frame, text='None', variable=self.RandomState, value='none')
 		self.RandomState_Integer_Button = ttk.Radiobutton(frame, text='Seed:', variable=self.RandomState, value='integer')
 		self.RandomState_Integer_Box = ttk.Entry(frame, textvariable=self.RandomState_Integer, width=7)
+	
+	def Validate(self):
+		Fields = {}
+		Features = {}
+		if self.MaxFeatures.get() == 'integer':
+			try:
+				Features['MaxFeatures'] = int(self.MaxFeatures_Integer.get())
+				MaxFeatures_Integer_Pattern = {'MaxFeatures':{'type':['integer'], 'min': 0}}
+				v = cerberus.Validator(MaxFeatures_Integer_Pattern)
+				if not v.validate(Features):
+					print("MaxFeatures failed verification.")
+					return False
+			except ValueError:
+				print("Invalid value for Max Features: Not an integer.")
+				return False
+		elif self.MaxFeatures.get() == 'float':
+			try:
+				Features['MaxFeatures'] = float(self.MaxFeatures_Float_Box.get())
+				MaxFeatures_Float_Pattern = {'MaxFeatures':{'type':['float'], 'min': 0.0, 'max':1.0}}
+				v = cerberus.Validator(MaxFeatures_Float_Pattern)
+				if not v.validate(Features):
+					print("MaxFeatures failed verification.")
+					return False
+			except ValueError:
+				print("Invalid value for Max Features: Not a float")
+				return False
+		
+		if self.MaxDepth.get() == 'integer':
+			try:
+				Fields['MaxDepth'] = int(self.MaxDepth_Integer.get())
+			except ValueError:
+				print("Invalid value for Max Depth: Not an integer")
+				return False
+		try:
+			Fields['MinSamplesSplit'] = int(self.MinSamplesSplit.get())
+		except ValueError:
+			print("Invalid value for Min Samples to Split: Not an integer.")
+			return False
+		try:
+			Fields['MinSamplesLeaf'] = int(self.MinSamplesLeaf.get())
+		except ValueError:
+			print("Invalid value for Minimum Leaf Samples: Not an integer.")
+			return False
+		try:
+			Fields['MinFractionLeaf'] = float(self.MinFractionLeaf.get())
+		except ValueError:
+			print("Invalid value for Min Fraction: Not a float.")
+			return False
+		if self.MaxLeafNodes.get() == 'integer':
+			try:
+				Fields['MaxLeafNodes'] = int(self.MaxLeafNodes_Integer.get())
+			except ValueError:
+				print("Invalid value for Max Leaf Nodes: Not an integer.")
+				return False
+		if self.RandomState.get() == 'integer':
+			try:
+				Fields['RandomState'] = int(self.RandomState_Integer.get())
+			except ValueError:
+				print("Invalid value for Random State: Not an integer.")
+				return False
+		Main_Pattern = {'MaxDepth':{'required':False, 'type':['integer'], 'min':2}, 'MinSamplesSplit':{'required': True, 'type': ['integer'], 'min': 2}, 'MinSamplesLeaf':{'required': True, 'type': ['integer'], 'min': 1}, 'MinFractionLeaf':{'required': True, 'type': ['float'], 'min': 0.0, 'max':1.0}, 'MaxLeafNodes':{'required': False, 'type': ['integer'], 'min': 1}, 'RandomState':{'required': False, 'type': ['integer'], 'min': 0}}
+		v = cerberus.Validator(Main_Pattern)
+		if not v.validate(Fields):
+			print("Failed main tests.")
+			return False
+		return True
+		
+		
+	
+	def Run(self):
+		if not self.Validate():
+			print("Validation failed.")
+			return False
+		else:
+			print("Validation Passed!")
+			return True
+		
+		
 		
 	def Display_Options(self):
 		self.clear_frame(self.frame)
