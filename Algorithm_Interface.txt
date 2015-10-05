@@ -1,0 +1,11 @@
+Interface for the Algorithm class:
+
+__init__(frame): The parameter is the tk frame the algorithm's options will be displayed in when the Display_Options method is called.
+
+Display_Options(): Displays the options used to customize the algorithm's performance in self.frame.
+
+Validate(): Ensures that the currently entered option values meet the requirements of scikit-learn.
+
+Import_Data(): Loads the data in the training and test files into appropriate NumPy format.
+
+Run(): Attempts to validate, then execute, the algorithm and reports the results.

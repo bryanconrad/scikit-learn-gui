@@ -35,6 +35,10 @@ def displayMethodOptions(args):
     global Alg
     Alg = AlgList[AlgorithmMenu.curselection()[0]]
     Alg.Display_Options()
+
+def Run():
+    global Alg
+    Alg.Run()
     
 root = Tk()
 root.geometry("900x700+50+50") 
@@ -45,8 +49,9 @@ menubar = Menu(content)
 AlgorithmFrame = ttk.Frame(content, padding=(3,3,12,12))
 AlgorithmFrame['relief'] = 'sunken'
 
-
+#To add a new algorithm to the list, add an instance of its class to the following dictionary:
 AlgList = {0: Decision_Tree_Classifier(AlgorithmFrame), 1: Gradient_Boosting_Classifier(AlgorithmFrame), 2: Logistic_Regression(AlgorithmFrame)}
+
 Alg = AlgList[0]
 # create a pulldown menu, and add it to the menu bar
 filemenu = Menu(menubar, tearoff=0)
@@ -111,7 +116,7 @@ AlgorithmMenu = Listbox(content, listvariable=algorithms, height=10, width=30)
 AlgorithmMenu.grid(column=0, columnspan=4, row=1, sticky=(N,W,E,S))
 AlgorithmMenu.bind('<<ListboxSelect>>', displayMethodOptions)
 AlgList[0].Display_Options()
-Run = ttk.Button(content, text='Run', command=lambda: Alg.Run())
+Run = ttk.Button(content, text='Run', command=Run)
 Run.grid(column=0, row=2, sticky=(W))
 
 

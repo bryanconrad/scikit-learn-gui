@@ -2,6 +2,7 @@ from algorithm import Algorithm
 from tkinter import *
 from tkinter import ttk
 import cerberus
+from sklearn.tree import DecisionTreeClassifier
 
 class Decision_Tree_Classifier(Algorithm):
 	
@@ -103,6 +104,7 @@ class Decision_Tree_Classifier(Algorithm):
 				if not v.validate(Features):
 					print("MaxFeatures failed verification.")
 					return False
+				self.MaxFeatures_Final = int(self.MaxFeatures_Integer.get())
 			except ValueError:
 				print("Invalid value for Max Features: Not an integer.")
 				return False
@@ -114,43 +116,62 @@ class Decision_Tree_Classifier(Algorithm):
 				if not v.validate(Features):
 					print("MaxFeatures failed verification.")
 					return False
+				self.MaxFeatures_Final = float(self.MaxFeatures_Float_Box.get())
 			except ValueError:
 				print("Invalid value for Max Features: Not a float")
 				return False
-		
+		elif self.MaxFeatures.get() == 'none':
+			self.MaxFeatures_Final = None
+		else:
+			self.MaxFeatures_Final = self.MaxFeatures.get()
 		if self.MaxDepth.get() == 'integer':
 			try:
 				Fields['MaxDepth'] = int(self.MaxDepth_Integer.get())
 			except ValueError:
 				print("Invalid value for Max Depth: Not an integer")
 				return False
+			self.MaxDepth_Final = int(self.MaxDepth_Integer.get())
+		else:
+			self.MaxDepth_Final = None
 		try:
 			Fields['MinSamplesSplit'] = int(self.MinSamplesSplit.get())
 		except ValueError:
 			print("Invalid value for Min Samples to Split: Not an integer.")
 			return False
+		self.MinSamplesSplit_Final = int(self.MinSamplesSplit.get())
 		try:
 			Fields['MinSamplesLeaf'] = int(self.MinSamplesLeaf.get())
 		except ValueError:
 			print("Invalid value for Minimum Leaf Samples: Not an integer.")
 			return False
+		self.MinSamplesLeaf_Final = int(self.MinSamplesLeaf.get())
 		try:
 			Fields['MinFractionLeaf'] = float(self.MinFractionLeaf.get())
 		except ValueError:
 			print("Invalid value for Min Fraction: Not a float.")
 			return False
+		self.MinFractionLeaf_Final = float(self.MinFractionLeaf.get())
 		if self.MaxLeafNodes.get() == 'integer':
 			try:
 				Fields['MaxLeafNodes'] = int(self.MaxLeafNodes_Integer.get())
 			except ValueError:
 				print("Invalid value for Max Leaf Nodes: Not an integer.")
 				return False
+			self.MaxLeafNodes_Final = int(self.MaxLeafNodes_Integer.get())
+		else:
+			self.MaxLeafNodes_Final = None
+		if self.ClassWeight.get() == 'dictionary': #Dictionary option is not yet implemented
+			print("Dictionary option is not yet implemented")
+			return False
 		if self.RandomState.get() == 'integer':
 			try:
 				Fields['RandomState'] = int(self.RandomState_Integer.get())
 			except ValueError:
 				print("Invalid value for Random State: Not an integer.")
 				return False
+			self.RandomState_Final = int(self.RandomState_Integer.get())
+		else:
+			self.RandomState_Final = None
 		Main_Pattern = {'MaxDepth':{'required':False, 'type':['integer'], 'min':2}, 'MinSamplesSplit':{'required': True, 'type': ['integer'], 'min': 2}, 'MinSamplesLeaf':{'required': True, 'type': ['integer'], 'min': 1}, 'MinFractionLeaf':{'required': True, 'type': ['float'], 'min': 0.0, 'max':1.0}, 'MaxLeafNodes':{'required': False, 'type': ['integer'], 'min': 1}, 'RandomState':{'required': False, 'type': ['integer'], 'min': 0}}
 		v = cerberus.Validator(Main_Pattern)
 		if not v.validate(Fields):
@@ -158,7 +179,8 @@ class Decision_Tree_Classifier(Algorithm):
 			return False
 		return True
 		
-		
+	def import_data(self):
+		x = 1
 	
 	def Run(self):
 		if not self.Validate():
@@ -166,9 +188,12 @@ class Decision_Tree_Classifier(Algorithm):
 			return False
 		else:
 			print("Validation Passed!")
-			return True
-		
-		
+			
+		Classifier = DecisionTreeClassifier(criterion=self.Criterion.get(), splitter=self.Splitter.get(), max_features=self.MaxFeatures_Final, max_depth=self.MaxDepth_Final, min_samples_split=self.MinSamplesSplit_Final, min_samples_leaf=self.MinSamplesLeaf_Final, min_weight_fraction_leaf=self.MinFractionLeaf_Final, max_leaf_nodes=self.MaxLeafNodes_Final, class_weight=self.ClassWeight.get(), random_state=self.RandomState_Final)
+		print("Classifier constructed")
+		self.import_data()
+		#Classifier.fit(self.Training_Data, self.Training_Labels)
+		#self.
 		
 	def Display_Options(self):
 		self.clear_frame(self.frame)
