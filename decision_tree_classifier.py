@@ -8,7 +8,7 @@ class Decision_Tree_Classifier(Algorithm):
 	
 	def __init__(self, frame): #Display options for the Decision Tree Classifier.
 		self.frame = frame
-		
+
 		self.name  = "Decision Tree Classifier"
 		#Options for the quality criteria.
 		self.Criterion_Label = ttk.Label(frame, text="Criterion:")
@@ -163,6 +163,10 @@ class Decision_Tree_Classifier(Algorithm):
 		if self.ClassWeight.get() == 'dictionary': #Dictionary option is not yet implemented
 			print("Dictionary option is not yet implemented")
 			return False
+		elif self.ClassWeight.get() == 'none':
+			self.ClassWeight_Final = None
+		else:
+			self.ClassWeight_Final = 'auto'
 		if self.RandomState.get() == 'integer':
 			try:
 				Fields['RandomState'] = int(self.RandomState_Integer.get())
@@ -179,21 +183,14 @@ class Decision_Tree_Classifier(Algorithm):
 			return False
 		return True
 		
-	def import_data(self):
-		x = 1
 	
-	def Run(self):
-		if not self.Validate():
-			print("Validation failed.")
-			return False
-		else:
-			print("Validation Passed!")
+	
+	def Create_Classifier(self):
 			
-		Classifier = DecisionTreeClassifier(criterion=self.Criterion.get(), splitter=self.Splitter.get(), max_features=self.MaxFeatures_Final, max_depth=self.MaxDepth_Final, min_samples_split=self.MinSamplesSplit_Final, min_samples_leaf=self.MinSamplesLeaf_Final, min_weight_fraction_leaf=self.MinFractionLeaf_Final, max_leaf_nodes=self.MaxLeafNodes_Final, class_weight=self.ClassWeight.get(), random_state=self.RandomState_Final)
+		self.Classifier = DecisionTreeClassifier(criterion=self.Criterion.get(), splitter=self.Splitter.get(), max_features=self.MaxFeatures_Final, max_depth=self.MaxDepth_Final, min_samples_split=self.MinSamplesSplit_Final, min_samples_leaf=self.MinSamplesLeaf_Final, min_weight_fraction_leaf=self.MinFractionLeaf_Final, max_leaf_nodes=self.MaxLeafNodes_Final, class_weight=self.ClassWeight_Final, random_state=self.RandomState_Final)
 		print("Classifier constructed")
-		self.import_data()
-		#Classifier.fit(self.Training_Data, self.Training_Labels)
-		#self.
+		
+		
 		
 	def Display_Options(self):
 		self.clear_frame(self.frame)

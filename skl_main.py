@@ -16,29 +16,33 @@ def save():
 def openFile():
     filename = filedialog.askopenfilename()
 def loadTrainingData():
-    trainingFileName = filedialog.askopenfilename()
-    TrainingDataPrompt.config(text=os.path.basename(trainingFileName))
+    global Training_Features_Filename
+    Training_Features_Filename = filedialog.askopenfilename()
+    TrainingDataPrompt.config(text=os.path.basename(Training_Features_Filename))
 
 def loadTrainingLabels():
-    trainingFileName = filedialog.askopenfilename()
-    TrainingLabelPrompt.config(text=os.path.basename(trainingFileName))
+    global Training_Labels_Filename
+    Training_Labels_Filename = filedialog.askopenfilename()
+    TrainingLabelPrompt.config(text=os.path.basename(Training_Labels_Filename))
 
 def loadTestData():
-    testFileName = filedialog.askopenfilename()
-    TestDataPrompt.config(text=os.path.basename(testFileName))
+    global Dev_Features_Filename
+    Dev_Features_Filename = filedialog.askopenfilename()
+    TestDataPrompt.config(text=os.path.basename(Dev_Features_Filename))
 
 def loadTestLabels():
-    testFileName = filedialog.askopenfilename()
-    TestLabelPrompt.config(text=os.path.basename(testFileName))
+    global Dev_Labels_Filename
+    Dev_Labels_Filename = filedialog.askopenfilename()
+    TestLabelPrompt.config(text=os.path.basename(Dev_Labels_Filename))
 
 def displayMethodOptions(args):
     global Alg
     Alg = AlgList[AlgorithmMenu.curselection()[0]]
     Alg.Display_Options()
 
-def Run():
+def RunCurrentAlgorithm():
     global Alg
-    Alg.Run()
+    Alg.Run(Training_Features_Filename, Training_Labels_Filename, Dev_Features_Filename, Dev_Labels_Filename)
     
 root = Tk()
 root.geometry("900x700+50+50") 
@@ -116,7 +120,7 @@ AlgorithmMenu = Listbox(content, listvariable=algorithms, height=10, width=30)
 AlgorithmMenu.grid(column=0, columnspan=4, row=1, sticky=(N,W,E,S))
 AlgorithmMenu.bind('<<ListboxSelect>>', displayMethodOptions)
 AlgList[0].Display_Options()
-Run = ttk.Button(content, text='Run', command=Run)
+Run = ttk.Button(content, text='Run', command=RunCurrentAlgorithm)
 Run.grid(column=0, row=2, sticky=(W))
 
 

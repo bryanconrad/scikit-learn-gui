@@ -214,3 +214,8 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+dev_data.csv
+dev_targets.csv
+train_data.csv
+train_targets.csv
