@@ -17,23 +17,23 @@ def openFile():
     filename = filedialog.askopenfilename()
 def loadTrainingData():
     global Training_Features_Filename
-    Training_Features_Filename = filedialog.askopenfilename()
-    TrainingDataPrompt.config(text=os.path.basename(Training_Features_Filename))
+    Training_Features_Filename.set(filedialog.askopenfilename())
+    #TrainingDataEntry.config(text=Training_Features_Filename)
 
 def loadTrainingLabels():
     global Training_Labels_Filename
-    Training_Labels_Filename = filedialog.askopenfilename()
-    TrainingLabelPrompt.config(text=os.path.basename(Training_Labels_Filename))
+    Training_Labels_Filename.set(filedialog.askopenfilename())
+    #TrainingLabelPrompt.config(text=Training_Labels_Filename)
 
 def loadTestData():
     global Dev_Features_Filename
-    Dev_Features_Filename = filedialog.askopenfilename()
-    TestDataPrompt.config(text=os.path.basename(Dev_Features_Filename))
+    Dev_Features_Filename.set(filedialog.askopenfilename())
+    #TestDataPrompt.config(text=Dev_Features_Filename)
 
 def loadTestLabels():
     global Dev_Labels_Filename
-    Dev_Labels_Filename = filedialog.askopenfilename()
-    TestLabelPrompt.config(text=os.path.basename(Dev_Labels_Filename))
+    Dev_Labels_Filename.set(filedialog.askopenfilename())
+    #TestLabelEntry.config(text=Dev_Labels_Filename)
 
 def displayMethodOptions(args):
     global Alg
@@ -42,7 +42,7 @@ def displayMethodOptions(args):
 
 def RunCurrentAlgorithm():
     global Alg
-    Alg.Run(Training_Features_Filename, Training_Labels_Filename, Dev_Features_Filename, Dev_Labels_Filename)
+    Alg.Run(Training_Features_Filename.get(), Training_Labels_Filename.get(), Dev_Features_Filename.get(), Dev_Labels_Filename.get())
     
 root = Tk()
 root.geometry("900x700+50+50") 
@@ -81,30 +81,46 @@ root.config(menu=menubar)
 content.grid(column=0, row=0, sticky=(N, S, E, W))
 
 files = ttk.Frame(content, padding=(3,3,12,12))
+Training_Features_Filename = StringVar()
+Training_Labels_Filename = StringVar()
+Dev_Features_Filename = StringVar()
+Dev_Labels_Filename = StringVar()
 
 TrainingDataText = ttk.Label(files, text='Training Data File: ')
 TrainingDataText.grid(column=0, columnspan=2, row=0)
 
-TrainingDataPrompt = ttk.Button(files, text="Click Here To Select", command=loadTrainingData)
-TrainingDataPrompt.grid(column=2, columnspan=4, row=0)
+TrainingDataEntry = ttk.Entry(files, textvariable=Training_Features_Filename)
+TrainingDataEntry.grid(column=2, columnspan=4, row=0)
+
+TrainingDataPrompt = ttk.Button(files, text="Browse", command=loadTrainingData)
+TrainingDataPrompt.grid(column=6, columnspan=2, row=0)
 
 TrainingLabelText = ttk.Label(files, text='Training Label File: ')
 TrainingLabelText.grid(column=0, columnspan=2, row=1)
 
-TrainingLabelPrompt = ttk.Button(files, text="Click Here To Select", command=loadTrainingLabels)
-TrainingLabelPrompt.grid(column=2, columnspan=4, row=1)
+TrainingLabelEntry = ttk.Entry(files, textvariable=Training_Labels_Filename)
+TrainingLabelEntry.grid(column=2, columnspan=4, row=1)
+
+TrainingLabelPrompt = ttk.Button(files, text="Browse", command=loadTrainingLabels)
+TrainingLabelPrompt.grid(column=6, columnspan=2, row=1)
 
 TestDataText = ttk.Label(files, text='Test Data File: ')
-TestDataText.grid(column=7, columnspan=2, row=0)
+TestDataText.grid(column=8, columnspan=2, row=0)
 
-TestDataPrompt = ttk.Button(files, text="Click Here To Select", command=loadTestData)
-TestDataPrompt.grid(column=9, columnspan=4, row=0)
+TestDataEntry = ttk.Entry(files, textvariable=Dev_Features_Filename)
+TestDataEntry.grid(column=10, columnspan=4, row=0)
+
+TestDataPrompt = ttk.Button(files, text="Browse", command=loadTestData)
+TestDataPrompt.grid(column=14, columnspan=2, row=0)
 
 TestLabelText = ttk.Label(files, text='Test Label File: ')
-TestLabelText.grid(column=7, columnspan=2, row=1)
+TestLabelText.grid(column=8, columnspan=2, row=1)
 
-TestLabelPrompt = ttk.Button(files, text="Click Here To Select", command=loadTestLabels)
-TestLabelPrompt.grid(column=9, columnspan=4, row=1)
+TestLabelEntry = ttk.Entry(files, textvariable=Dev_Labels_Filename)
+TestLabelEntry.grid(column=10, columnspan=4, row=1)
+
+TestLabelPrompt = ttk.Button(files, text="Browse", command=loadTestLabels)
+TestLabelPrompt.grid(column=14, columnspan=4, row=1)
 
 files.grid(column=0, columnspan=8, row=0)
 
