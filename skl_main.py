@@ -18,22 +18,22 @@ def openFile():
 def loadTrainingData():
     global Training_Features_Filename
     Training_Features_Filename.set(filedialog.askopenfilename())
-    #TrainingDataEntry.config(text=Training_Features_Filename)
 
 def loadTrainingLabels():
     global Training_Labels_Filename
     Training_Labels_Filename.set(filedialog.askopenfilename())
-    #TrainingLabelPrompt.config(text=Training_Labels_Filename)
 
 def loadTestData():
     global Dev_Features_Filename
     Dev_Features_Filename.set(filedialog.askopenfilename())
-    #TestDataPrompt.config(text=Dev_Features_Filename)
 
 def loadTestLabels():
     global Dev_Labels_Filename
     Dev_Labels_Filename.set(filedialog.askopenfilename())
-    #TestLabelEntry.config(text=Dev_Labels_Filename)
+
+def loadPredictionsFile():
+    global Predictions_Filename
+    Predictions_Filename.set(filedialog.askopenfilename())
 
 def displayMethodOptions(args):
     global Alg
@@ -42,7 +42,7 @@ def displayMethodOptions(args):
 
 def RunCurrentAlgorithm():
     global Alg
-    Alg.Run(Training_Features_Filename.get(), Training_Labels_Filename.get(), Dev_Features_Filename.get(), Dev_Labels_Filename.get())
+    Alg.Run(Training_Features_Filename.get(), Training_Labels_Filename.get(), Dev_Features_Filename.get(), Dev_Labels_Filename.get(), Predictions_Filename.get())
     
 root = Tk()
 root.geometry("900x700+50+50") 
@@ -85,6 +85,7 @@ Training_Features_Filename = StringVar()
 Training_Labels_Filename = StringVar()
 Dev_Features_Filename = StringVar()
 Dev_Labels_Filename = StringVar()
+Predictions_Filename = StringVar()
 
 TrainingDataText = ttk.Label(files, text='Training Data File: ')
 TrainingDataText.grid(column=0, columnspan=2, row=0)
@@ -121,6 +122,15 @@ TestLabelEntry.grid(column=10, columnspan=4, row=1)
 
 TestLabelPrompt = ttk.Button(files, text="Browse", command=loadTestLabels)
 TestLabelPrompt.grid(column=14, columnspan=4, row=1)
+
+PredictionsText = ttk.Label(files, text='Predictions File: ')
+PredictionsText.grid(column=0, columnspan=2, row=2)
+
+PredictionsEntry = ttk.Entry(files, textvariable=Predictions_Filename)
+PredictionsEntry.grid(column=2, columnspan=4, row=2)
+
+PredictionsPrompt = ttk.Button(files, text="Browse", command=loadPredictionsFile)
+PredictionsPrompt.grid(column=6, columnspan=2, row=2)
 
 files.grid(column=0, columnspan=8, row=0)
 

@@ -23,7 +23,7 @@ class Algorithm:
 		destroy.grid()
 		popup.mainloop()
 		
-	def Run(self, Training_Features_Filename, Training_Labels_Filename, Dev_Features_Filename, Dev_Labels_Filename):
+	def Run(self, Training_Features_Filename, Training_Labels_Filename, Dev_Features_Filename, Dev_Labels_Filename, Predictions_Filename):
 		if not self.Validate():
 			print("Validation failed.")
 			return False
@@ -32,6 +32,11 @@ class Algorithm:
 		self.Create_Classifier()
 		self.import_data(Training_Features_Filename, Training_Labels_Filename, Dev_Features_Filename, Dev_Labels_Filename)
 		self.Classifier.fit(self.Training_Data, self.Training_Labels)
+		predictions = self.Classifier.predict(self.Dev_Data)
+		with open(Predictions_Filename, "w") as Predictions_File:
+			for prediction in predictions:
+				Predictions_File.write(prediction)
+				Predictions_File.write("\n")
 		score = self.Classifier.score(self.Dev_Data, self.Dev_Labels)
 		self.Create_Popup("Score: " + str(score))
 		
